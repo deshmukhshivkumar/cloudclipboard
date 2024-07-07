@@ -20,6 +20,7 @@ export class AuthGoogleService {
       clientId: '1034694733314-5u3844j9vtq07orlsi7762ui57dv1m5k.apps.googleusercontent.com',
       redirectUri: window.location.origin + '/dashboard',
       scope: 'openid profile email',
+      showDebugInformation:true
     };
 
     this.oAuthService.configure(authConfig);
