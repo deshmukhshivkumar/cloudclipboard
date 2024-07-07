@@ -3,5 +3,8 @@
 
 
   <button (click)="logOut()">LogOut</button>
-  <p>{{clipBoardData}}</p>
+
+  <div *ngFor="let item of clipBoardData">
+    <p>{{item.value}}</p>
+  </div>
 </div>
