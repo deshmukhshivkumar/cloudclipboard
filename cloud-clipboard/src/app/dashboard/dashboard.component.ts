@@ -3,14 +3,15 @@ import { Router } from '@angular/router';
 import { AuthGoogleService } from '../services/auth-google.service';
 import { ClipBoardService } from '../services/cboard.service';
 import { CommonModule } from '@angular/common';
-import { ClipBoardItem } from "../model/ClipBoardItem";
+import { MatTableModule } from '@angular/material/table';
+import { ClipBoardItem } from '../model/ClipBoardItem';
 
 const MODULES = [CommonModule];
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [MODULES],
+  imports: [MODULES, MatTableModule],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
 })
@@ -18,9 +19,11 @@ export class DashboardComponent implements OnInit {
   private authService = inject(AuthGoogleService);
   private cboardService = inject(ClipBoardService);
   private router = inject(Router);
-  ClipBoardItems: ClipBoardItem[] = [];
+  clipBoardItems: ClipBoardItem[] = [];
   profile: any;
   clipBoardData: any;
+  dataSource: any[] = [];
+  displayedColumns: string[] = ['createdatetime', 'value'];
 
   ngOnInit(): void {
     this.showData();
@@ -30,21 +33,15 @@ export class DashboardComponent implements OnInit {
     let authServieResponse = this.authService.getProfile();
     console.log(authServieResponse);
     this.profile = authServieResponse;
-    // if (this.profile === null) {
-    //   alert("profile is null");
-    //   this.router.navigate(['/login']);
-    // }
-
-    this.cboardService.getClipBoards()
-    .subscribe((resp: { headers: any[]; body: any; }) => {
-      console.log(resp);
-      const keys = resp.headers.keys();
-  
-      for (const data of resp.body!) {
-        this.ClipBoardItems.push(data);
+    this.cboardService.getClipBoards().subscribe((serviceResponse: any[]) => {
+      console.log('clipboard data');
+      console.log(serviceResponse);
+      for (const data of serviceResponse) {
+        this.clipBoardItems.push(data);
       }
-      console.log(this.clipBoardData);
-    }); 
+      this.dataSource = this.clipBoardItems;
+      console.log(this.clipBoardItems);
+    });
   }
 
   logOut() {
