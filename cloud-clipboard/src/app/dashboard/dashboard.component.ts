@@ -1,4 +1,10 @@
-import {ChangeDetectionStrategy, Component, OnInit, inject,model, signal } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  inject,
+  model,
+  signal,
+} from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthGoogleService } from '../services/auth-google.service';
 import { ClipBoardService } from '../services/cboard.service';
@@ -8,19 +14,12 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatGridListModule } from '@angular/material/grid-list';
-import {MatIconModule} from '@angular/material/icon';
-import {FormsModule} from '@angular/forms';
-import {
-  MAT_DIALOG_DATA,
-  MatDialog,
-  MatDialogActions,
-  MatDialogClose,
-  MatDialogContent,
-  MatDialogRef,
-  MatDialogTitle,
-} from '@angular/material/dialog';
-import {MatInputModule} from '@angular/material/input';
+import { MatIconModule } from '@angular/material/icon';
+import { FormsModule } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
+import { MatInputModule } from '@angular/material/input';
 import { ClipBoardItem } from '../model/ClipBoardItem';
+import { DialogOverviewExampleDialog } from '../create/create.component';
 
 const MODULES = [CommonModule];
 
@@ -36,11 +35,10 @@ const MODULES = [CommonModule];
     MatGridListModule,
     MatIconModule,
     FormsModule,
-    MatInputModule
+    MatInputModule,
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DashboardComponent implements OnInit {
   private authService = inject(AuthGoogleService);
@@ -64,8 +62,6 @@ export class DashboardComponent implements OnInit {
     console.log(authServieResponse);
     this.profile = authServieResponse;
     this.cboardService.getClipBoards().subscribe((serviceResponse: any[]) => {
-      console.log('clipboard data');
-      console.log(serviceResponse);
       for (const data of serviceResponse) {
         this.clipBoardItems.push(data);
       }
@@ -81,25 +77,14 @@ export class DashboardComponent implements OnInit {
 
   openDialog(): void {
     const dialogRef = this.dialog.open(DialogOverviewExampleDialog, {
-      data: {value: this.value, clipboardItem: this.clipboardItemSignal()},
+      data: { value: this.value, clipboardItem: this.clipboardItemSignal() },
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       console.log('The dialog was closed');
       if (result !== undefined) {
         this.clipboardItemSignal.set(result);
       }
     });
-  }
-
-}
-
-export class DialogOverviewExampleDialog {
-  readonly dialogRef = inject(MatDialogRef<DialogOverviewExampleDialog>);
-  readonly data = inject<ClipBoardItem>(MAT_DIALOG_DATA);
-  readonly clipboardItem = model(this.data.value);
-
-  onNoClick(): void {
-    this.dialogRef.close();
   }
 }
