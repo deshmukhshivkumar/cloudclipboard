@@ -1,23 +1,22 @@
-<div class="dashboard">
-  <h1> Hello <b>{{profile.name }}</b> your clipboards</h1>
-  <button (click)="logOut()">LogOut</button>
-  
-  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 demo-table">
-    
-    <!-- Name Column -->
-    <ng-container matColumnDef="createdatetime">
-      <th mat-header-cell *matHeaderCellDef> Name </th>
-      <td mat-cell *matCellDef="let element"> {{element.createdatetime}} </td>
-    </ng-container>
+<h1> Hello <b>{{profile.name }}</b> your clipboards</h1>
+<button mat-raised-button (click)="logOut()">LogOut</button>
 
-    <!-- Weight Column -->
-    <ng-container matColumnDef="value">
-      <th mat-header-cell *matHeaderCellDef> Value </th>
-      <td mat-cell *matCellDef="let element"> {{element.value}} </td>
-    </ng-container>
+<button mat-fab (click)="openDialog()">
+  <mat-icon>add</mat-icon>
+</button>
 
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-  </table>
-
-</div>
+<mat-grid-list cols="1" rowHeight="100px">
+  <mat-grid-tile *ngFor="let card of clipBoardItems">
+    <mat-card style="background-color: lightblue" appearance="outlined">
+      <mat-card-header>
+        <mat-card-title> {{card.value}} </mat-card-title>
+      </mat-card-header>
+      <mat-card-content></mat-card-content>
+      <mat-card-footer>{{card.createdatetime}}
+        <button mat-icon-button>
+          <mat-icon>delete</mat-icon>
+        </button>
+      </mat-card-footer>
+    </mat-card>
+  </mat-grid-tile>
+</mat-grid-list>
