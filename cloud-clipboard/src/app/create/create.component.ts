@@ -12,7 +12,7 @@ import {
 } from '@angular/material/dialog';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
-import { ClipBoardItem } from '../model/ClipBoardItem';
+import { ClipBoardItem as cbItem } from '../model/ClipBoardItem';
 
 
 @Component({
@@ -32,10 +32,13 @@ import { ClipBoardItem } from '../model/ClipBoardItem';
   })
   export class DialogOverviewExampleDialog {
     readonly dialogRef = inject(MatDialogRef<DialogOverviewExampleDialog>);
-    readonly data = inject<ClipboardItem>(MAT_DIALOG_DATA);
-    readonly clipBoardValue = model(this.data.getType);
+    readonly data = inject<cbItem>(MAT_DIALOG_DATA);
+
+    readonly clipBoardValue = model(this.data.value);
   
+
     onNoClick(): void {
+      console.log(this.data);
       this.dialogRef.close();
     }
   }

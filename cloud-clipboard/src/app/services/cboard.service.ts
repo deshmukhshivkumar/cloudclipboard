@@ -11,8 +11,7 @@ export class ClipBoardService {
     private httpService = inject(HttpClient);
     private serviceUrl;
     constructor() {
-        this.serviceUrl ="https://5c1z33hx19.execute-api.ap-south-1.amazonaws.com/green?uid=u123";
-        this.getClipBoards();
+        this.serviceUrl = new URL("https://5c1z33hx19.execute-api.ap-south-1.amazonaws.com/green");
     }
 
     private handleError(error: HttpErrorResponse): any {
@@ -26,8 +25,18 @@ export class ClipBoardService {
         return throwError(() => 'error occured; please try again later.');
       }
 
-    getClipBoards(): Observable<any> {
-        return this.httpService.get<ClipBoardItem[]>(this.serviceUrl).pipe(
-            retry(3), catchError(this.handleError));;
+    getClipBoards(uid: string): Observable<any> {
+        const baseURL = new URL (this.serviceUrl.toString());
+        const param = new URLSearchParams(baseURL.search);
+        param.append("uid", uid);
+        baseURL.search= param.toString();
+
+        return this.httpService.get<ClipBoardItem[]>(baseURL.toString()).pipe(
+            retry(3), catchError(this.handleError));
+    }
+
+    saveClipBoards(clipboardItem: ClipBoardItem): Observable<any> {
+        return this.httpService.post(this.serviceUrl.toString(), clipboardItem).pipe(
+          retry(1), catchError(this.handleError));
     }
 }
